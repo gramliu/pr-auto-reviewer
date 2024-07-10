@@ -3,6 +3,7 @@ const webpack = require("webpack")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const CopyWebpackPlugin = require("copy-webpack-plugin")
+
 module.exports = {
   mode: "development",
   entry: {
@@ -86,6 +87,7 @@ module.exports = {
       patterns: [
         { from: "./public/manifest.json", to: "manifest.json" },
         { from: "./public/content.js", to: "content.js" },
+        { from: "./public/background.js", to: "background.js" },
         { from: "./public/icons", to: "icons" },
       ],
     }),

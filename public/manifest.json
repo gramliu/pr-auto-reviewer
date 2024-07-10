@@ -14,8 +14,11 @@
       "js": ["content.js"]
     }
   ],
-  "web_accessible_resources": ["index.html"],
-  "browser_action": {
+  "web_accessible_resources": [{
+    "resources": ["index.html"],
+    "matches": ["https://github.com/*"]
+  }],
+  "action": {
     "default_popup": "index.html"
   },
   "icons": {
