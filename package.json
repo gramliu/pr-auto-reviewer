@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "prop-types": "^15.8.1",
-    "react": "^18.2.0",
+    "react": "^18.3.1",
     "react-delay-render": "^0.1.2",
-    "react-dom": "^18.2.0",
+    "react-dom": "^18.3.1",
     "react-imported-component": "^6.5.3",
     "react-router-dom": "^6.11.2"
   },
@@ -24,6 +24,8 @@
     "@babel/preset-env": "^7.22.4",
     "@babel/preset-react": "^7.22.3",
     "@hot-loader/react-dom": "^17.0.2",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.14",
     "babel-loader": "^9.1.2",
     "copy-webpack-plugin": "^11.0.0",
@@ -38,6 +40,8 @@
     "react-hot-loader": "^4.13.1",
     "rimraf": "^5.0.1",
     "style-loader": "^3.3.3",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.3",
     "webpack": "^5.84.1",
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "^4.15.0"
@@ -65,7 +69,12 @@
   },
   "babel": {
     "presets": [
-      ["@babel/preset-env", { "modules": false }],
+      [
+        "@babel/preset-env",
+        {
+          "modules": false
+        }
+      ],
       "@babel/preset-react"
     ],
     "plugins": [
