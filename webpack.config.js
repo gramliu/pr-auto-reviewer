@@ -8,9 +8,16 @@ module.exports = {
   mode: "development",
   entry: {
     app: "./src/index.tsx",
+    background: "./src/background.ts",
+    content: "./src/content.ts",
   },
   output: {
-    filename: "static/[name].[hash].js",
+    filename: (pathData) => {
+      console.log("[webpack***] ", pathData.chunk.name)
+      return pathData.chunk.name === 'app' 
+        ? 'static/[name].[hash].js'
+        : '[name].js';
+    },
     path: path.resolve(__dirname, "dist"),
     publicPath: "/",
   },
@@ -86,8 +93,6 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         { from: "./public/manifest.json", to: "manifest.json" },
-        { from: "./public/content.js", to: "content.js" },
-        { from: "./public/background.js", to: "background.js" },
         { from: "./public/icons", to: "icons" },
       ],
     }),
