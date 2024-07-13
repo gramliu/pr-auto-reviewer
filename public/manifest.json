@@ -4,7 +4,7 @@
   "version": "1.0",
   "description": "Automatically reviews PRs by analyzing the diff and the PR description",
   "permissions": ["activeTab", "tabs", "storage", "scripting"],
-  "host_permissions": ["https://github.com/*"],
+  "host_permissions": ["https://github.com/*", "https://patch-diff.githubusercontent.com/*"],
   "background": {
     "service_worker": "background.js"
   },

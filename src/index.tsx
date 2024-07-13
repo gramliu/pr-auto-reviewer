@@ -1,13 +1,7 @@
 /*global chrome*/
 import React from "react"
 import ReactDOM from "react-dom/client"
-import App from "./components/App"
-
-// console.log = (data) => {
-//   console.log(data)
-//   // if chrome is defined
-//   // if (chrome) chrome.runtime.sendMessage({ message: "log", data })
-// }
+import App from "./App"
 
 console.log("index.js loading...")
 
