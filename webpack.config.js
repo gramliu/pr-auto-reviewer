@@ -24,6 +24,9 @@ module.exports = {
   devtool: "source-map",
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+    },
   },
   module: {
     rules: [
@@ -39,25 +42,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-          },
-          {
-            loader: "css-loader",
-            options: {
-              modules: {
-                exportLocalsConvention: "camelCaseOnly",
-                namedExport: true,
-              },
-              sourceMap: true,
-              importLoaders: 1,
-            },
-          },
-          {
-            loader: "postcss-loader",
-          },
-        ],
+        use: ['style-loader', 'css-loader', 'postcss-loader'],
       },
     ],
   },
