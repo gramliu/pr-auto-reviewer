@@ -58,6 +58,61 @@ const inputTemplate = `Here are the details of the pull request:
 </diff>
 </pull_request>`
 
+const sampleResponse = `"Here's my review of the pull request:
+
+<review>
+<overview>
+This pull request updates the version of the @xenova/transformers package from 2.5.4 to 2.17.2 across multiple package.json files. It also modifies the HuggingFaceTransformersEmbeddings class in the hf_transformers.ts file to accommodate new features and options available in the updated package version.
+</overview>
+
+<feedback>
+1. Version Update:
+   The update of @xenova/transformers from 2.5.4 to 2.17.2 is a significant version jump. This is generally positive as it brings in new features and improvements, but it's important to ensure compatibility with the rest of the project.
+
+2. Code Changes in hf_transformers.ts:
+   a. Type Imports:
+      The change from importing a generic Pipeline type to more specific types (PretrainedOptions, FeatureExtractionPipelineOptions, FeatureExtractionPipeline) improves type safety and clarity.
+
+   b. New Options:
+      The addition of pretrainedOptions and pipelineOptions to the HuggingFaceTransformersEmbeddingsParams interface allows for more flexible configuration. This is a good improvement in terms of customization.
+
+   c. Default Options:
+      Setting default values for pipelineOptions (pooling: "mean", normalize: true) while allowing overrides is a good practice. It maintains backward compatibility while enabling new customizations.
+
+   d. Pipeline Creation:
+      The pipeline creation now includes the pretrainedOptions, which allows for more control over the model loading process.
+
+3. Code Style and Structure:
+   The changes maintain the existing code style and structure, which is good for consistency.
+
+4. Error Handling:
+   There don't appear to be any changes to error handling. Given the significant version update, it might be worth considering if any new error scenarios need to be addressed.
+
+5. Documentation:
+   The new options (pretrainedOptions and pipelineOptions) are added to the interface but lack detailed documentation. Consider adding JSDoc comments to explain what these options do and provide examples of their usage.
+</feedback>
+
+<considerations>
+1. Testing:
+   Ensure that comprehensive tests are in place to verify that the embeddings functionality works correctly with the new version of @xenova/transformers, especially with the new configuration options.
+
+2. Performance:
+   The significant version jump may have performance implications. It would be beneficial to benchmark the new version against the old one to identify any performance changes.
+
+3. Compatibility:
+   Verify that this update doesn't introduce any breaking changes for existing users of the HuggingFaceTransformersEmbeddings class.
+
+4. Dependencies:
+   The yarn.lock file shows that a new dependency (@huggingface/jinja) has been added as part of the @xenova/transformers update. Ensure that this new dependency doesn't conflict with other parts of the project.
+
+5. Documentation Update:
+   Consider updating any relevant documentation or README files to reflect the new capabilities and configuration options introduced by this change.
+
+6. Changelog:
+   It would be helpful to include a brief changelog or note in the pull request description highlighting the key changes and any new features that users can take advantage of with this update.
+</considerations>
+</review>"`
+
 function generateInput(summary: string, diff: string): string {
   return inputTemplate.replace("{{PR_SUMMARY}}", summary).replace("{{PR_DIFF}}", diff)
 }
@@ -76,7 +131,11 @@ function parseResponse(response: string): ReviewResponse {
 }
 
 // Get a review from Claude
-export async function reviewPullRequest(summary: string, diff: string, apiKey: string): Promise<ReviewResponse> {
+export async function reviewPullRequest(summary: string, diff: string, apiKey: string, cacheResponses: boolean = true): Promise<ReviewResponse> {
+  if (cacheResponses) {
+    return parseResponse(sampleResponse)
+  }
+  
   const input = generateInput(summary, diff)
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
