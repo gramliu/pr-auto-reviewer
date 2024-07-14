@@ -1,22 +1,34 @@
 import { Loader2Icon } from "lucide-react"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 export default function PRReviewPanel() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [apiKey, setApiKey] = useState("")
 
   const handleClick = () => {
     setIsAnalyzing(true)
-    chrome.runtime.sendMessage(
-      { action: "analyzePR", url: window.location.href },
-      (response) => {
-        setIsAnalyzing(false)
-        // Handle the response if needed
-      },
-    )
+    chrome.runtime.sendMessage({
+      action: "analyzePR",
+      url: window.location.href,
+      apiKey,
+    })
   }
 
+  useEffect(() => {
+    chrome.storage.local.get(["apiKey"], (result) => {
+      setApiKey(result.apiKey)
+    })
+
+    chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+      if (message.action === "analyzeResult") {
+        setIsAnalyzing(false)
+        console.log("Received response", message.result)
+      }
+    })
+  }, [])
+
   return (
-    <div className="mt-3">
+    <div>
       <button
         onClick={handleClick}
         disabled={isAnalyzing}
@@ -24,8 +36,8 @@ export default function PRReviewPanel() {
         style={{ width: "100%" }}
       >
         {isAnalyzing ? (
-          <span>
-            <Loader2Icon className="mr-2 animate-spin" />
+          <span className="d-flex flex-items-center flex-justify-center">
+            <Loader2Icon className="anim-rotate mr-2" />
             Analyzing...
           </span>
         ) : (

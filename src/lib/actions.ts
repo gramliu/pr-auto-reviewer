@@ -1,1 +1,1 @@
-export type Action = "url.changed"
+export type Action = "analyzePR"

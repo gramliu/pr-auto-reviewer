@@ -1,6 +1,6 @@
 // Listen for incoming requests
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === "analyze") {
+  if (message.action === "analyzePR") {
     analyzePR(message.url, message.apiKey)
   }
 })

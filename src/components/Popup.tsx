@@ -15,7 +15,7 @@ export default function Popup() {
 
   useEffect(() => {
     // Load API key from browser storage
-    chrome.storage.sync.get("apiKey", (result) => {
+    chrome.storage.local.get("apiKey", (result) => {
       if (result.apiKey) {
         setApiKey(result.apiKey)
       }
@@ -64,7 +64,7 @@ export default function Popup() {
               <Button
                 onClick={() => {
                   setEditApiKey(false)
-                  chrome.storage.sync.set({ apiKey })
+                  chrome.storage.local.set({ apiKey })
                 }}
                 size="icon"
                 variant="outline"
@@ -99,7 +99,7 @@ export default function Popup() {
             // Send current tab URL to the background script
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
               chrome.runtime.sendMessage({
-                action: "analyze",
+                action: "analyzePR",
                 url: tabs[0].url,
                 apiKey,
               })
