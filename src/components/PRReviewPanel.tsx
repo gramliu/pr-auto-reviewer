@@ -28,7 +28,8 @@ export default function PRReviewPanel() {
   }, [])
 
   return (
-    <div>
+    <>
+      <div className="discussion-sidebar-heading text-bold">PR Analyzer</div>
       <button
         onClick={handleClick}
         disabled={isAnalyzing}
@@ -44,6 +45,6 @@ export default function PRReviewPanel() {
           <span>Analyze Pull Request</span>
         )}
       </button>
-    </div>
+    </>
   )
 }
