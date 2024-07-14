@@ -19,17 +19,17 @@ interface GithubPRMetadata {
 }
 
 function extractGitHubPRInfo(url: string): GitHubPRInfo | null {
-  const regex = /^https:\/\/github\.com\/([^\/]+\/[^\/]+)\/pull\/(\d+)$/;
-  const match = url.match(regex);
+  const regex = /^https:\/\/github\.com\/([^\/]+\/[^\/]+)\/pull\/(\d+)$/
+  const match = url.match(regex)
 
   if (match) {
     return {
       projectIdentifier: match[1],
-      prNumber: parseInt(match[2], 10)
-    };
+      prNumber: parseInt(match[2], 10),
+    }
   }
 
-  return null;
+  return null
 }
 
 // Analyze the PR
@@ -46,11 +46,11 @@ async function analyzePR(url: string, apiKey: string) {
 
     const [metadataResponse, diffResponse] = await Promise.all([
       fetch(metadataUrl),
-      fetch(diffUrl)
+      fetch(diffUrl),
     ])
     const [metadataJson, diff]: [GithubPRMetadata, string] = await Promise.all([
       metadataResponse.json(),
-      diffResponse.text()
+      diffResponse.text(),
     ])
 
     const summary = metadataJson.pull_request.body
@@ -60,6 +60,9 @@ async function analyzePR(url: string, apiKey: string) {
       chrome.tabs.sendMessage(tabs[0].id!, {
         action: "analyzeResult",
         result: reviewResult,
+      })
+      chrome.tabs.update(tabs[0].id!, {
+        url: `${url}#new_comment_field`,
       })
     })
   } catch (error) {

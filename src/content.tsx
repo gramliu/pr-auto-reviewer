@@ -1,9 +1,9 @@
 import PRReviewPanel from "@/components/PRReviewPanel"
 import React from "react"
-import { createPortal } from "react-dom"
 import { createRoot } from "react-dom/client"
+import { ReviewResponse } from "./lib/review"
 
-function injectReactComponent() {
+function injectAnalyzeButton() {
   // Find the target element to inject our button
   const targetElement = document.querySelector("#partial-discussion-sidebar")
 
@@ -22,4 +22,34 @@ function injectReactComponent() {
   }
 }
 
-injectReactComponent()
+function formatReviewResponseToMarkdown(response: ReviewResponse) {
+  return `<!-- 
+## Overview
+${response.overview}
+-->
+
+## Feedback
+${response.feedback}
+
+## Considerations
+${response.considerations}`
+}
+
+function injectResponseContent(response: ReviewResponse) {
+  const targetElement = document.querySelector<HTMLTextAreaElement>(
+    "#new_comment_field",
+  )
+  if (targetElement) {
+    targetElement.value = formatReviewResponseToMarkdown(response)
+  }
+}
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === "analyzeResult") {
+    console.log("Received response", message.result)
+    injectResponseContent(message.result)
+  }
+})
+
+// Main entry point
+injectAnalyzeButton()

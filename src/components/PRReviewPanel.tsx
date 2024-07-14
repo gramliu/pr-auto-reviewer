@@ -1,4 +1,5 @@
 import { CHROME_STORAGE_KEY } from "@/lib/constants"
+import { ReviewResponse } from "@/lib/review"
 import { Loader2Icon } from "lucide-react"
 import React, { useEffect, useState } from "react"
 
@@ -22,8 +23,8 @@ export default function PRReviewPanel() {
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.action === "analyzeResult") {
-        setIsAnalyzing(false)
         console.log("Received response", message.result)
+        setIsAnalyzing(false)
       }
     })
   }, [])
