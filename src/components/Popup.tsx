@@ -2,6 +2,7 @@ import { CheckIcon, Loader2Icon, PencilIcon } from "lucide-react"
 import React, { useEffect, useState } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
+import { CHROME_STORAGE_KEY } from "@/lib/constants"
 
 const model = "claude-3.5-sonnet"
 
@@ -14,10 +15,11 @@ export default function Popup() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
 
   useEffect(() => {
+    console.log("Running effect")
     // Load API key from browser storage
-    chrome.storage.local.get("apiKey", (result) => {
-      if (result.apiKey) {
-        setApiKey(result.apiKey)
+    chrome.storage.sync.get(CHROME_STORAGE_KEY, (result) => {
+      if (result[CHROME_STORAGE_KEY]) {
+        setApiKey(result[CHROME_STORAGE_KEY])
       }
     })
 
@@ -64,7 +66,7 @@ export default function Popup() {
               <Button
                 onClick={() => {
                   setEditApiKey(false)
-                  chrome.storage.local.set({ apiKey })
+                  chrome.storage.sync.set({ [CHROME_STORAGE_KEY]: apiKey })
                 }}
                 size="icon"
                 variant="outline"
@@ -110,11 +112,11 @@ export default function Popup() {
         >
           {/* Icon */}
           <span className="mr-3">
-          {isAnalyzing ? (
-            <Loader2Icon className="w-4 h-4 animate-spin" />
-          ) : (
-            <span>✨</span>
-          )}
+            {isAnalyzing ? (
+              <Loader2Icon className="w-4 h-4 animate-spin" />
+            ) : (
+              <span>✨</span>
+            )}
           </span>
           {isAnalyzing ? "Analyzing..." : "Analyze"}
         </Button>

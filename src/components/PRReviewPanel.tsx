@@ -1,3 +1,4 @@
+import { CHROME_STORAGE_KEY } from "@/lib/constants"
 import { Loader2Icon } from "lucide-react"
 import React, { useEffect, useState } from "react"
 
@@ -15,8 +16,8 @@ export default function PRReviewPanel() {
   }
 
   useEffect(() => {
-    chrome.storage.local.get(["apiKey"], (result) => {
-      setApiKey(result.apiKey)
+    chrome.storage.sync.get(CHROME_STORAGE_KEY, (result) => {
+      setApiKey(result[CHROME_STORAGE_KEY])
     })
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
