@@ -23,6 +23,10 @@
     {
       "resources": ["index.html"],
       "matches": ["https://github.com/*"]
+    },
+    {
+      "resources": ["icons/icon_128.png"],
+      "matches": ["https://github.com/*"]
     }
   ],
   "action": {

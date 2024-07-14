@@ -2,6 +2,7 @@ import PRReviewPanel from "@/components/PRReviewPanel"
 import React from "react"
 import { createRoot } from "react-dom/client"
 import { ReviewResponse } from "./lib/review"
+import ReviewComment from "./components/ReviewComment"
 
 function injectAnalyzeButton() {
   // Find the target element to inject our button
@@ -13,7 +14,7 @@ function injectAnalyzeButton() {
     container.id = "pr-analyzer-container"
     container.className =
       "discussion-sidebar-item sidebar-assignee js-discussion-sidebar-item position-relative"
-    
+
     targetElement.insertBefore(container, targetElement.firstChild)
     const root = createRoot(container)
     root.render(<PRReviewPanel />)
@@ -35,10 +36,28 @@ ${response.feedback}
 ${response.considerations}`
 }
 
+function injectCommentBox(review: ReviewResponse) {
+  const anchor = document.querySelector("#issue-comment-box")
+  if (anchor) {
+    const container = document.createElement("div")
+    container.id = "pr-analyzer-response"
+    container.className =
+      "pull-merging js-pull-merging js-socket-channel js-updatable-content js-pull-refresh-on-pjax"
+
+    const targetContainer = anchor.parentElement
+    targetContainer.insertBefore(container, anchor)
+    const root = createRoot(container)
+    root.render(
+      <ReviewComment
+        review={review}
+      />,
+    )
+  }
+}
+
 function injectResponseContent(response: ReviewResponse) {
-  const targetElement = document.querySelector<HTMLTextAreaElement>(
-    "#new_comment_field",
-  )
+  const targetElement =
+    document.querySelector<HTMLTextAreaElement>("#new_comment_field")
   if (targetElement) {
     targetElement.value = formatReviewResponseToMarkdown(response)
   }
@@ -47,7 +66,8 @@ function injectResponseContent(response: ReviewResponse) {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "analyzeResult") {
     console.log("Received response", message.result)
-    injectResponseContent(message.result)
+    // injectResponseContent(message.result)
+    injectCommentBox(message.result)
   }
 })
 
