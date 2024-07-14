@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-import { CheckIcon, PencilIcon } from "lucide-react"
+import { CheckIcon, Loader2Icon, PencilIcon, SparkleIcon } from "lucide-react"
+import { getApiKey } from "@/lib/utils"
 
 const model = "claude-3.5-sonnet"
 
@@ -11,6 +12,7 @@ export default function Popup() {
   const [showAnalyzeButton, setShowAnalyzeButton] = useState(false)
   const [reviewResult, setReviewResult] = useState("")
   const [editApiKey, setEditApiKey] = useState(false)
+  const [isAnalyzing, setIsAnalyzing] = useState(false)
 
   useEffect(() => {
     // Load API key from browser storage
@@ -32,8 +34,10 @@ export default function Popup() {
   // Listen for messages from the background script
   useEffect(() => {
     const listener = (message: any) => {
-      if (message.action === "reviewResult") {
+      if (message.action === "analyzeResult") {
+        setIsAnalyzing(false)
         setReviewResult(message.result)
+        console.log(message.result)
       }
     }
     chrome.runtime.onMessage.addListener(listener)
@@ -57,7 +61,6 @@ export default function Popup() {
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder="sk-ant-api"
-                className="mb-2"
               />
               <Button
                 onClick={() => {
@@ -78,7 +81,6 @@ export default function Popup() {
                 value={apiKey}
                 onChange={(e) => setApiKey(e.target.value)}
                 placeholder="sk-ant-api"
-                className="mb-2"
               />
               <Button
                 onClick={() => setEditApiKey(true)}
@@ -93,18 +95,29 @@ export default function Popup() {
       </div>
       {showAnalyzeButton && (
         <Button
-          onClick={() =>
+          onClick={() => {
+            setIsAnalyzing(true)
             // Send current tab URL to the background script
             chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
               chrome.runtime.sendMessage({
                 action: "analyze",
                 url: tabs[0].url,
+                apiKey,
               })
             })
-          }
+          }}
+          disabled={isAnalyzing}
           className="w-full"
         >
-          ✨ Analyze
+          {/* Icon */}
+          <span className="mr-3">
+          {isAnalyzing ? (
+            <Loader2Icon className="w-4 h-4 animate-spin" />
+          ) : (
+            <span>✨</span>
+          )}
+          </span>
+          {isAnalyzing ? "Analyzing..." : "Analyze"}
         </Button>
       )}
       {reviewResult && (

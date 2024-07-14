@@ -1,49 +1,60 @@
+// Listen for incoming requests
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.action === 'analyze') {
-    analyzePR(message.url);
+  if (message.action === "analyze") {
+    analyzePR(message.url, message.apiKey)
   }
-});
+})
 
-async function analyzePR(url: string) {
+// Analyze the PR
+async function analyzePR(url: string, apiKey: string) {
   try {
-    const diffUrl = `${url}.diff`;
-    const response = await fetch(diffUrl);
-    const diff = await response.text();
+    const diffUrl = `${url}.diff`
+    const response = await fetch(diffUrl)
+    const diff = await response.text()
 
-    const { apiKey } = await chrome.storage.sync.get('apiKey');
-    if (!apiKey) {
-      throw new Error('API key not found');
-    }
+    const reviewResult = await getClaudeReview(diff, apiKey)
 
-    const reviewResult = await getClaudeReview(diff, apiKey);
-    
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id!, { action: 'reviewResult', result: reviewResult });
-    });
+      chrome.tabs.sendMessage(tabs[0].id!, {
+        action: "analyzeResult",
+        result: reviewResult,
+      })
+    })
   } catch (error) {
-    console.error('Error analyzing PR:', error);
+    console.error("Error analyzing PR:", error)
   }
 }
 
+const systemPrompt = `You are an experienced software engineer providing thorough and constructive reviews on GitHub pull requests.
+You will be provided with a diff of a pull request and asked to provide a summary of the changes.
+The summary should be in the form of a list of bullet points, each bullet point describing a change that was made.`
+
+// Get a review from Claude
 async function getClaudeReview(diff: string, apiKey: string): Promise<string> {
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
+  console.log("Sending diff")
+  console.log("API Key", apiKey)
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
     },
     body: JSON.stringify({
-      model: 'claude-3.5-sonnet',
+      model: "claude-3-5-sonnet-20240620",
+      system: systemPrompt,
       messages: [
         {
-          role: 'user',
-          content: `Please review the following PR diff and provide a concise summary of the changes:\n\n${diff}`,
+          role: "user",
+          content: `<code>${diff}</code>`,
         },
       ],
       max_tokens: 1000,
     }),
-  });
+  })
 
-  const data = await response.json();
-  return data.content[0].text;
+  console.log("Received response")
+  const data = await response.json()
+  console.log("Received data", data)
+  return data.content[0].text
 }
