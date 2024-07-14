@@ -9,7 +9,7 @@ module.exports = {
   entry: {
     app: "./src/index.tsx",
     background: "./src/background.ts",
-    content: "./src/content.ts",
+    content: "./src/content.tsx",
   },
   output: {
     filename: (pathData) => {

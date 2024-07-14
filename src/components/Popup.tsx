@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react"
+import { CheckIcon, Loader2Icon, PencilIcon } from "lucide-react"
+import React, { useEffect, useState } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
-import { CheckIcon, Loader2Icon, PencilIcon, SparkleIcon } from "lucide-react"
-import { getApiKey } from "@/lib/utils"
 
 const model = "claude-3.5-sonnet"
 
