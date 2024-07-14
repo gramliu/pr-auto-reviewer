@@ -15,7 +15,6 @@ export default function Popup() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
 
   useEffect(() => {
-    console.log("Running effect")
     // Load API key from browser storage
     chrome.storage.sync.get(CHROME_STORAGE_KEY, (result) => {
       if (result[CHROME_STORAGE_KEY]) {

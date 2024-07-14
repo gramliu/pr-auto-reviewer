@@ -69,9 +69,9 @@ export interface ReviewResponse {
 }
 
 function parseResponse(response: string): ReviewResponse {
-  const overview = response.match(/<overview>([\s\S]+)<\/overview>/)?.[1]
-  const feedback = response.match(/<feedback>([\s\S]+)<\/feedback>/)?.[1]
-  const considerations = response.match(/<considerations>([\s\S]+)<\/considerations>/)?.[1]
+  const overview = response.match(/<overview>([\s\S]+)<\/overview>/)?.[1]?.trim()
+  const feedback = response.match(/<feedback>([\s\S]+)<\/feedback>/)?.[1]?.trim()
+  const considerations = response.match(/<considerations>([\s\S]+)<\/considerations>/)?.[1]?.trim()
   return { overview, feedback, considerations }
 }
 
