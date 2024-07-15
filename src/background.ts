@@ -19,7 +19,8 @@ interface GithubPRMetadata {
 }
 
 function extractGitHubPRInfo(url: string): GitHubPRInfo | null {
-  const regex = /^https:\/\/github\.com\/([^\/]+\/[^\/]+)\/pull\/(\d+)$/
+  const regex =
+    /^https:\/\/github\.com\/([^\/]+\/[^\/]+)\/pull\/(\d+)(?:[#?].*)?$/
   const match = url.match(regex)
 
   if (match) {

@@ -41,7 +41,7 @@ export default function ReviewComment({ review }: Props) {
                     PR Analysis
                   </div>
                   <span className="status-meta">
-                    Analysis of the pull request
+                    Analysis of the pull request (only you can see this).
                   </span>
                 </div>
                 <div className="branch-action-item">
