@@ -13,7 +13,7 @@ interface Props {
 
 function FormattedText({ text }: { text: string }): JSX.Element[] {
   // Split the markdown into paragraphs
-  const paragraphs = text.split("\n\n")
+  const paragraphs = text.split("\n")
 
   return paragraphs.map((paragraph, index) => {
     // Split the paragraph into parts, separating code blocks
