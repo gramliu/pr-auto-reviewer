@@ -67,6 +67,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "analyzeResult") {
     // injectResponseContent(message.result)
     injectCommentBox(message.result)
+  } else if (message.action === "analyzeError") {
+    console.error(message.error)
   }
 })
 

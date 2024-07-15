@@ -18,7 +18,8 @@ To complete this task, follow these steps:
    - Test coverage and quality
    - Documentation updates (if applicable)
 
-   For each point of feedback, provide specific examples from the code and suggest improvements where applicable. Feel free to omit minor changes that don't require any feedback. Keep things concise where possible.
+   Focus only on important pieces of feedback or changes to make. For each point of feedback, provide specific examples from the code and suggest improvements where applicable. 
+   Feel free to omit minor changes that don't require any feedback. Keep things concise where possible.
 
 3. Outstanding Considerations:
    Identify any areas that require further attention or discussion, such as:
@@ -114,7 +115,9 @@ This pull request updates the version of the \`@xenova/transformers\` package fr
 </review>"`
 
 function generateInput(summary: string, diff: string): string {
-  return inputTemplate.replace("{{PR_SUMMARY}}", summary).replace("{{PR_DIFF}}", diff)
+  return inputTemplate
+    .replace("{{PR_SUMMARY}}", summary)
+    .replace("{{PR_DIFF}}", diff)
 }
 
 export interface ReviewResponse {
@@ -124,18 +127,29 @@ export interface ReviewResponse {
 }
 
 function parseResponse(response: string): ReviewResponse {
-  const overview = response.match(/<overview>([\s\S]+)<\/overview>/)?.[1]?.trim()
-  const feedback = response.match(/<feedback>([\s\S]+)<\/feedback>/)?.[1]?.trim()
-  const considerations = response.match(/<considerations>([\s\S]+)<\/considerations>/)?.[1]?.trim()
+  const overview = response
+    .match(/<overview>([\s\S]+)<\/overview>/)?.[1]
+    ?.trim()
+  const feedback = response
+    .match(/<feedback>([\s\S]+)<\/feedback>/)?.[1]
+    ?.trim()
+  const considerations = response
+    .match(/<considerations>([\s\S]+)<\/considerations>/)?.[1]
+    ?.trim()
   return { overview, feedback, considerations }
 }
 
 // Get a review from Claude
-export async function reviewPullRequest(summary: string, diff: string, apiKey: string, cacheResponses: boolean = true): Promise<ReviewResponse> {
+export async function reviewPullRequest(
+  summary: string,
+  diff: string,
+  apiKey: string,
+  cacheResponses: boolean = false,
+): Promise<ReviewResponse> {
   if (cacheResponses) {
     return parseResponse(sampleResponse)
   }
-  
+
   const input = generateInput(summary, diff)
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -158,7 +172,10 @@ export async function reviewPullRequest(summary: string, diff: string, apiKey: s
   })
 
   const data = await response.json()
-  console.log(data);
+  console.log(data)
+  if (data.error) {
+    throw new Error(data.error.message)
+  }
   const { text } = data.content[0]
   return parseResponse(text)
 }

@@ -68,5 +68,11 @@ async function analyzePR(url: string, apiKey: string) {
     })
   } catch (error) {
     console.error("Error analyzing PR:", error)
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      chrome.tabs.sendMessage(tabs[0].id!, {
+        action: "analyzeError",
+        error: error.message,
+      })
+    })
   }
 }

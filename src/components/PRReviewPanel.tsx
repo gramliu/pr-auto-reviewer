@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react"
 
 export default function PRReviewPanel() {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [apiKey, setApiKey] = useState("")
 
   const handleClick = () => {
@@ -25,6 +26,11 @@ export default function PRReviewPanel() {
       if (message.action === "analyzeResult") {
         console.log("Received response", message.result)
         setIsAnalyzing(false)
+        setError(null)
+      } else if (message.action === "analyzeError") {
+        console.error("Received error", message.error)
+        setIsAnalyzing(false)
+        setError(message.error)
       }
     })
   }, [])
@@ -47,6 +53,12 @@ export default function PRReviewPanel() {
           <span>Analyze Pull Request</span>
         )}
       </button>
+      {error && (
+        <div className="mt-2">
+          <h3 className="status-heading h3 color-fg-danger">Error analyzing PR</h3>
+          <p className="status-meta">{error}</p>
+        </div>
+      )}
     </>
   )
 }
