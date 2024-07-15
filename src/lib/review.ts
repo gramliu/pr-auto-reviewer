@@ -62,12 +62,12 @@ const sampleResponse = `"Here's my review of the pull request:
 
 <review>
 <overview>
-This pull request updates the version of the @xenova/transformers package from 2.5.4 to 2.17.2 across multiple package.json files. It also modifies the HuggingFaceTransformersEmbeddings class in the hf_transformers.ts file to accommodate new features and options available in the updated package version.
+This pull request updates the version of the \`@xenova/transformers\` package from 2.5.4 to 2.17.2 across multiple package.json files. It also modifies the HuggingFaceTransformersEmbeddings class in the hf_transformers.ts file to accommodate new features and options available in the updated package version.
 </overview>
 
 <feedback>
 1. Version Update:
-   The update of @xenova/transformers from 2.5.4 to 2.17.2 is a significant version jump. This is generally positive as it brings in new features and improvements, but it's important to ensure compatibility with the rest of the project.
+   The update of \`@xenova/transformers\` from 2.5.4 to 2.17.2 is a significant version jump. This is generally positive as it brings in new features and improvements, but it's important to ensure compatibility with the rest of the project.
 
 2. Code Changes in hf_transformers.ts:
    a. Type Imports:
@@ -94,7 +94,7 @@ This pull request updates the version of the @xenova/transformers package from 2
 
 <considerations>
 1. Testing:
-   Ensure that comprehensive tests are in place to verify that the embeddings functionality works correctly with the new version of @xenova/transformers, especially with the new configuration options.
+   Ensure that comprehensive tests are in place to verify that the embeddings functionality works correctly with the new version of \`@xenova/transformers\`, especially with the new configuration options.
 
 2. Performance:
    The significant version jump may have performance implications. It would be beneficial to benchmark the new version against the old one to identify any performance changes.
@@ -103,7 +103,7 @@ This pull request updates the version of the @xenova/transformers package from 2
    Verify that this update doesn't introduce any breaking changes for existing users of the HuggingFaceTransformersEmbeddings class.
 
 4. Dependencies:
-   The yarn.lock file shows that a new dependency (@huggingface/jinja) has been added as part of the @xenova/transformers update. Ensure that this new dependency doesn't conflict with other parts of the project.
+   The yarn.lock file shows that a new dependency (\`@huggingface/jinja\`) has been added as part of the \`@xenova/transformers\` update. Ensure that this new dependency doesn't conflict with other parts of the project.
 
 5. Documentation Update:
    Consider updating any relevant documentation or README files to reflect the new capabilities and configuration options introduced by this change.

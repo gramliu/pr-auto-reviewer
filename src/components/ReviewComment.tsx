@@ -11,6 +11,28 @@ interface Props {
   review: ReviewResponse
 }
 
+function FormattedText({ text }: { text: string }): JSX.Element[] {
+  // Split the markdown into paragraphs
+  const paragraphs = text.split("\n\n")
+
+  return paragraphs.map((paragraph, index) => {
+    // Split the paragraph into parts, separating code blocks
+    const parts = paragraph.split(/(`.*?`)/)
+
+    const elements = parts.map((part, partIndex) => {
+      if (part.startsWith("`") && part.endsWith("`")) {
+        // This is a code block
+        return <code key={partIndex}>{part.slice(1, -1)}</code>
+      } else {
+        // This is regular text
+        return part
+      }
+    })
+
+    return <p key={index}>{elements}</p>
+  })
+}
+
 export default function ReviewComment({ review }: Props) {
   const imageUrl = chrome.runtime.getURL("icons/icon_128.png")
   return (
@@ -48,40 +70,40 @@ export default function ReviewComment({ review }: Props) {
                   <div className="branch-action-item-icon completeness-indicator">
                     <SquareGanttChart />
                   </div>
-                  <div className="h4 status-heading color-fg-default">
-                    Overview
-                  </div>
-                  <span className="status-meta">
-                    <pre style={{ whiteSpace: "pre-wrap" }}>
-                      {review.overview}
-                    </pre>
-                  </span>
+                  <details>
+                    <summary className="h4 status-heading color-fg-default">
+                      Overview
+                    </summary>
+                    <span className="markdown-body comment-body">
+                      <FormattedText text={review.overview} />
+                    </span>
+                  </details>
                 </div>
                 <div className="branch-action-item">
                   <div className="branch-action-item-icon completeness-indicator">
                     <InfoIcon />
                   </div>
-                  <div className="h4 status-heading color-fg-accent">
-                    Feedback
-                  </div>
-                  <span className="status-meta">
-                    <pre style={{ whiteSpace: "pre-wrap" }}>
-                      {review.feedback}
-                    </pre>
-                  </span>
+                  <details>
+                    <summary className="h4 status-heading color-fg-accent">
+                      Feedback
+                    </summary>
+                    <span className="markdown-body comment-body">
+                      <FormattedText text={review.feedback} />
+                    </span>
+                  </details>
                 </div>
                 <div className="branch-action-item">
                   <div className="branch-action-item-icon completeness-indicator">
                     <CircleAlertIcon />
                   </div>
-                  <div className="h4 status-heading color-fg-attention">
-                    Considerations
-                  </div>
-                  <span className="status-meta">
-                    <pre style={{ whiteSpace: "pre-wrap" }}>
-                      {review.considerations}
-                    </pre>
-                  </span>
+                  <details>
+                    <summary className="h4 status-heading color-fg-attention">
+                      Considerations
+                    </summary>
+                    <span className="markdown-body comment-body">
+                      <FormattedText text={review.considerations} />
+                    </span>
+                  </details>
                 </div>
               </div>
             </div>
