@@ -150,6 +150,9 @@ export async function reviewPullRequest(
     return parseResponse(sampleResponse)
   }
 
+  console.log("Summary", summary)
+  console.log("Diff", diff)
+
   const input = generateInput(summary, diff)
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",

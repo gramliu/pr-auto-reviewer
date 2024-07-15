@@ -24,11 +24,10 @@ export default function PRReviewPanel() {
 
     chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       if (message.action === "analyzeResult") {
-        console.log("Received response", message.result)
         setIsAnalyzing(false)
         setError(null)
       } else if (message.action === "analyzeError") {
-        console.error("Received error", message.error)
+        console.error(message.error)
         setIsAnalyzing(false)
         setError(message.error)
       }
