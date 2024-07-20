@@ -1,9 +1,9 @@
 import { ReviewResponse } from "@/lib/review"
 import {
   BotIcon,
-  CircleAlertIcon,
   InfoIcon,
   SquareGanttChart,
+  TriangleAlertIcon
 } from "lucide-react"
 import React from "react"
 
@@ -84,7 +84,7 @@ export default function ReviewComment({ review }: Props) {
                     <InfoIcon />
                   </div>
                   <details>
-                    <summary className="h4 status-heading color-fg-accent">
+                    <summary className="h4 status-heading color-fg-default">
                       Feedback
                     </summary>
                     <span className="markdown-body comment-body">
@@ -94,10 +94,10 @@ export default function ReviewComment({ review }: Props) {
                 </div>
                 <div className="branch-action-item">
                   <div className="branch-action-item-icon completeness-indicator">
-                    <CircleAlertIcon />
+                    <TriangleAlertIcon />
                   </div>
                   <details>
-                    <summary className="h4 status-heading color-fg-attention">
+                    <summary className="h4 status-heading color-fg-default">
                       Considerations
                     </summary>
                     <span className="markdown-body comment-body">
