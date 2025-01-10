@@ -42,20 +42,10 @@ async function analyzePR(url: string, apiKey: string) {
       throw new Error("Invalid PR URL")
     }
 
-    const metadataUrl = `https://api.github.com/repos/${projectIdentifier}/issues/${prNumber}`
     const diffUrl = `${url}.diff`
-
-    const [metadataResponse, diffResponse] = await Promise.all([
-      fetch(metadataUrl),
-      fetch(diffUrl),
-    ])
-    const [metadataJson, diff]: [GithubPRMetadata, string] = await Promise.all([
-      metadataResponse.json(),
-      diffResponse.text(),
-    ])
-
-    const summary = metadataJson.pull_request.body
-    const reviewResult = await reviewPullRequest(summary, diff, apiKey)
+    const diffResponse = await fetch(diffUrl)
+    const diff = await diffResponse.text()
+    const reviewResult = await reviewPullRequest("", diff)
 
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       chrome.tabs.sendMessage(tabs[0].id!, {

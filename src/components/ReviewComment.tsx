@@ -3,7 +3,7 @@ import {
   BotIcon,
   InfoIcon,
   SquareGanttChart,
-  TriangleAlertIcon
+  TriangleAlertIcon,
 } from "lucide-react"
 import React from "react"
 
@@ -12,24 +12,53 @@ interface Props {
 }
 
 function FormattedText({ text }: { text: string }): JSX.Element[] {
-  // Split the markdown into paragraphs
-  const paragraphs = text.split("\n")
+  // Split the text into sections based on code blocks first
+  const sections = text.split(/(```[\s\S]*?```)/g)
 
-  return paragraphs.map((paragraph, index) => {
-    // Split the paragraph into parts, separating code blocks
-    const parts = paragraph.split(/(`.*?`)/)
+  return sections.flatMap((section, sectionIndex) => {
+    if (section.startsWith("```")) {
+      // Handle triple backtick code blocks
+      const codeContent = section.slice(3, -3)
+      const firstLineEnd = codeContent.indexOf("\n")
+      let language =
+        firstLineEnd > -1 ? codeContent.slice(0, firstLineEnd).trim() : ""
+      language = language === "typescript" ? "ts" : language
+      const code =
+        firstLineEnd > -1 ? codeContent.slice(firstLineEnd + 1) : codeContent
 
-    const elements = parts.map((part, partIndex) => {
-      if (part.startsWith("`") && part.endsWith("`")) {
-        // This is a code block
-        return <code key={partIndex}>{part.slice(1, -1)}</code>
-      } else {
-        // This is regular text
-        return part
-      }
-    })
+      return [
+        <div
+          key={sectionIndex}
+          className={`highlight highlight-source-${language} notranslate position-relative overflow-auto`}
+        >
+          <pre className="notranslate rgh-linkified-code">{code}</pre>
+        </div>,
+      ]
+    } else {
+      // Handle regular paragraphs with potential inline code
+      const paragraphs = section.split("\n")
 
-    return <p key={index}>{elements}</p>
+      return paragraphs
+        .map((paragraph, index) => {
+          if (!paragraph.trim()) return null
+
+          // Split the paragraph into parts, separating inline code blocks
+          const parts = paragraph.split(/(`.*?`)/)
+
+          const elements = parts.map((part, partIndex) => {
+            if (part.startsWith("`") && part.endsWith("`")) {
+              // This is an inline code block
+              return <code key={partIndex}>{part.slice(1, -1)}</code>
+            } else {
+              // This is regular text
+              return part
+            }
+          })
+
+          return <p key={`${sectionIndex}-${index}`}>{elements}</p>
+        })
+        .filter(Boolean)
+    }
   })
 }
 
