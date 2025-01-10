@@ -1,3 +1,5 @@
+const BACKEND_URL = "http://localhost:4001"
+
 const inputTemplate = `Here are the details of the pull request:
 
 <pull_request>
@@ -41,7 +43,7 @@ export async function reviewPullRequest(
   diff: string,
 ): Promise<ReviewResponse> {
   const input = generateInput(summary, diff)
-  const response = await fetch("http://localhost:4001/review", {
+  const response = await fetch(`${BACKEND_URL}/review`, {
     method: "POST",
     body: JSON.stringify({ input }),
   })
